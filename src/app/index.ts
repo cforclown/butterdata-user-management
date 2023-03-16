@@ -8,11 +8,8 @@ import expressFlash from 'express-flash';
 import expressSession from 'express-session';
 import cors from 'cors';
 import swaggerJsDoc from 'swagger-jsdoc';
-import passport from 'passport';
 import swaggerUI from 'swagger-ui-express';
 import swaggerConfig from '../swagger/configs';
-import { container } from '../di-config';
-import { InitLocalStrategy } from '../resources';
 import path from 'path';
 import { MainRouter } from './routers';
 
@@ -47,11 +44,6 @@ function App (): Express {
   const swaggerDocs = swaggerJsDoc(swaggerConfig);
   app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
   // #endregion -----------------------------------------------------------------------
-
-  app.use(passport.initialize());
-  app.use(passport.session());
-  const authService = container.resolve('authService');
-  InitLocalStrategy(passport, authService);
 
   app.use('/', MainRouter());
 

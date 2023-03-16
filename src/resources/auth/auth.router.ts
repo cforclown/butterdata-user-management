@@ -1,5 +1,4 @@
 import express from 'express';
-import passport from 'passport';
 import { dro, RequestHandler, validateBody } from '../../utils';
 import { HttpCodes } from '../../utils/exceptions';
 import { LoginPayloadSchema, RefreshTokenPayloadSchema, RegisterPayloadSchema } from '.';
@@ -25,17 +24,7 @@ export function AuthRouter ({ authController }: { authController: AuthController
    *                      schema:
    *                          $ref: '#/components/schemas/login'
    */
-  router.post(
-    '/login',
-    passport.authenticate('local', {
-      successRedirect: '/auth/login/verify',
-      failureRedirect: '/auth/login/error',
-      failureMessage: true
-    })
-  );
-
-  router.post('/login/test', validateBody(LoginPayloadSchema), RequestHandler(authController.login));
-  router.get('/login/verify', RequestHandler(authController.verify));
+  router.post('/login', validateBody(LoginPayloadSchema), RequestHandler(authController.login));
   router.get('/login/error', async (req, res) => res.status(HttpCodes.NotFound).send(dro.error('Username or password is incorrect')));
 
   /**
