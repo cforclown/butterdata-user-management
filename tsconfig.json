@@ -1,0 +1,35 @@
+{
+  "include": [
+    "src",
+    "__mock__",
+    "jest.config.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ],
+  "compilerOptions": {
+    "target": "es2021",
+    "lib": [
+      "DOM"
+    ],
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "rootDirs": [
+      "src",
+      "__mock__"
+    ],
+    "outDir": "build",
+    "declaration": true,
+    "strict": true
+  }
+}
