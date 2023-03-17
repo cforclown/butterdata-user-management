@@ -1,7 +1,7 @@
 import express from 'express';
 import { dro, RequestHandler, validateBody } from '../../utils';
 import { HttpCodes } from '../../utils/exceptions';
-import { LoginPayloadSchema, LoginGooglePayloadSchema, RefreshTokenPayloadSchema, RegisterPayloadSchema } from '.';
+import { LoginPayloadSchema, LoginGooglePayloadSchema, RefreshTokenPayloadSchema, RegisterPayloadSchema, AccessTokenPayloadSchema } from '.';
 import { AuthController } from './auth.controller';
 
 export function AuthRouter ({ authController }: { authController: AuthController }): express.Router {
@@ -85,6 +85,8 @@ export function AuthRouter ({ authController }: { authController: AuthController
    *              - Bearer: []
    */
   router.delete('/logout', RequestHandler(async () => Promise.resolve(true)));
+
+  router.post('/access-token', validateBody(AccessTokenPayloadSchema), RequestHandler(authController.refresh));
 
   return router;
 }

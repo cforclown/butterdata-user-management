@@ -20,3 +20,6 @@ export const RegisterPayloadSchema = Joi.object({
 export const RefreshTokenPayloadSchema = Joi.object({
   refreshToken: Joi.string().required()
 });
+export const AccessTokenPayloadSchema = Joi.object({
+  refreshToken: Joi.string().required()
+});
