@@ -14,7 +14,7 @@ export interface ILoginPayload {
 
 export interface ILoginGooglePayload {
   email: string;
-  password: string;
+  fullname: string;
 }
 
 export interface IRegisterUserPayload {

@@ -12,7 +12,5 @@ export const UsersModel = new Schema({
     required: false,
     default: null
   },
-  archived: { type: Boolean, required: false, default: false },
-  createdAt: { type: Date, required: true },
-  updatedAt: { type: Date, required: true }
-});
+  archived: { type: Boolean, required: false, default: false }
+}, { timestamps: true });

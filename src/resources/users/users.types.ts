@@ -3,13 +3,9 @@ export interface IUser {
   email: string;
   password?: string;
   fullname: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-export interface ICreateUserPayload extends Omit<IUser, '_id'> {
-  password: string;
-};
+export interface ICreateUserPayload extends Omit<IUser, '_id'> {}
 
 export interface IUpdateUserPayload {
   _id: string;

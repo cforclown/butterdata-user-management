@@ -1,4 +1,4 @@
 export * from './environment';
-export * from './save-error-log';
+export * from './error-logger';
 export * from './logger';
 export * from './type-checker';

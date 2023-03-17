@@ -1,7 +1,7 @@
 import { model, Model } from 'mongoose';
 import { HttpCodes, RestApiException } from '../../utils/exceptions';
+import { ILoginPayload } from '../auth';
 import { ICreateUserPayload, IUpdateUserPayload, IUser } from './users.types';
-import { ILoginGooglePayload, ILoginPayload } from '../auth';
 
 export class UsersDao {
   private readonly usersModel: Model<IUser>;
@@ -28,10 +28,6 @@ export class UsersDao {
 
   async create (payload: ICreateUserPayload): Promise<IUser> {
     return this.usersModel.create({ ...payload });
-  }
-
-  async createByGoogle (payload: ILoginGooglePayload): Promise<IUser> {
-    return this.usersModel.create({ ...payload, createdAt: new Date(), updatedAt: new Date() });
   }
 
   async update (payload: IUpdateUserPayload): Promise<IUser> {

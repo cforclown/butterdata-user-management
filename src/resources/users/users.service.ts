@@ -1,7 +1,7 @@
 import { ICreateUserPayload, IUpdateUserPayload, IUser, UsersDao } from '.';
-import { ILoginGooglePayload, ILoginPayload } from '../auth';
 import { RestApiException } from '../../utils/exceptions';
 import { hashPassword } from '../../utils';
+import { ILoginPayload } from '../auth';
 
 export class UsersService {
   private readonly usersDao: UsersDao;
@@ -21,33 +21,24 @@ export class UsersService {
     return this.usersDao.get(userId);
   }
 
+  getByEmail (email: string): Promise<IUser | null> {
+    return this.usersDao.getByEmail(email);
+  }
+
   getAll (): Promise<IUser[]> {
     return this.usersDao.getAll();
   }
 
   async create (payload: ICreateUserPayload): Promise<IUser> {
-    const [isEmailRegistered] = await Promise.all([
-      this.usersDao.getByEmail(payload.email)
-    ]);
+    const isEmailRegistered = await this.usersDao.getByEmail(payload.email);
     if (isEmailRegistered) {
       throw new RestApiException('Email already registered');
     }
 
     return this.usersDao.create({
       ...payload,
-      password: (await hashPassword(payload.password)),
-      // createdAt: new Date(),
-      // updatedAt: new Date(),
+      password: payload.password ? (await hashPassword(payload.password)) : undefined
     });
-  }
-
-  async googleCreate (payload: ILoginGooglePayload): Promise<IUser> {
-    const [emailRegistered] = await Promise.all([
-      this.usersDao.getByEmail(payload.email)
-    ]);
-    if (emailRegistered) return emailRegistered;
-
-    return this.usersDao.createByGoogle(payload);
   }
 
   async update (payload: IUpdateUserPayload): Promise<IUser> {

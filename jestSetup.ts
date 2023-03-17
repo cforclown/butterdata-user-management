@@ -1,9 +1,8 @@
 process.env.NODE_ENV='test';
 
 process.env.SERVER_PORT='55555';
-process.env.APP_HOST='http://localhost:55556';
 
-process.env.SESSION_SECRET='LAAD1_SESSION_SECRET';
+process.env.SESSION_SECRET='SESSION_SECRET';
 process.env.SESSION_RESAVE='false';
 process.env.SESSION_SAVE_UNINITIALIZED='false'
 process.env.SESSION_COOKIE_SECURE='false'

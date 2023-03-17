@@ -1,7 +1,6 @@
 import express from 'express';
-import { dro, RequestHandler, validateBody } from '../../utils';
-import { HttpCodes } from '../../utils/exceptions';
-import { LoginPayloadSchema, LoginGooglePayloadSchema, RefreshTokenPayloadSchema, RegisterPayloadSchema, AccessTokenPayloadSchema } from '.';
+import { RequestHandler, validateBody } from '../../utils';
+import { AuthenticatePayloadSchema, LoginGooglePayloadSchema, LoginPayloadSchema, RefreshTokenPayloadSchema, RegisterPayloadSchema } from '.';
 import { AuthController } from './auth.controller';
 
 export function AuthRouter ({ authController }: { authController: AuthController }): express.Router {
@@ -25,9 +24,25 @@ export function AuthRouter ({ authController }: { authController: AuthController
    *                          $ref: '#/components/schemas/login'
    */
   router.post('/login', validateBody(LoginPayloadSchema), RequestHandler(authController.login));
-  router.get('/login/error', async (req, res) => res.status(HttpCodes.NotFound).send(dro.error('Email or password is incorrect')));
 
-  router.post('/login-google', validateBody(LoginGooglePayloadSchema), RequestHandler(authController.google));
+  /**
+   * @swagger
+   * /auth/login-google:
+   *      post:
+   *          tags:
+   *              - Authentication
+   *          description: Register
+   *          responses:
+   *              '200':
+   *                  description: Login with Google success
+   *          requestBody:
+   *              required: true
+   *              content:
+   *                  application/json:
+   *                      schema:
+   *                          $ref: '#/components/schemas/loginGoogle'
+   */
+  router.post('/login-google', validateBody(LoginGooglePayloadSchema), RequestHandler(authController.loginGoogle));
 
   /**
    * @swagger
@@ -47,8 +62,6 @@ export function AuthRouter ({ authController }: { authController: AuthController
    *                          $ref: '#/components/schemas/register'
    */
   router.post('/register', validateBody(RegisterPayloadSchema), RequestHandler(authController.register));
-
-  router.post('/login/test', validateBody(LoginPayloadSchema), RequestHandler(authController.login));
 
   /**
    * @swagger
@@ -86,8 +99,7 @@ export function AuthRouter ({ authController }: { authController: AuthController
    */
   router.delete('/logout', RequestHandler(async () => Promise.resolve(true)));
 
-  router.post('/access-token', validateBody(AccessTokenPayloadSchema), RequestHandler(authController.refresh));
+  router.post('/authenticate', validateBody(AuthenticatePayloadSchema), RequestHandler(authController.authenticate));
 
   return router;
 }
-

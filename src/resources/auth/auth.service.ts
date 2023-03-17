@@ -28,6 +28,15 @@ export class AuthService {
     return user;
   }
 
+  async authenticateAccessToken (accessToken: string): Promise<boolean> {
+    const userTokenData = this.verifyAccessToken(accessToken);
+    const user = await this.usersService.get((userTokenData as IUser)._id);
+    if (!user) {
+      throw new RestApiException('Access token is not valid');
+    }
+    return true;
+  }
+
   async login (payload: ILoginPayload): Promise<IAccessToken> {
     const user = await this.usersService.authenticate(payload);
     if (!user) {
@@ -36,33 +45,33 @@ export class AuthService {
     return this.generateAccessToken(user);
   }
 
-  async verify (user?: IUser): Promise<IAccessToken> {
-    if (!user) {
-      throw new Error('No user object in request');
-    }
-    return this.generateAccessToken(user);
-  }
-
   async register (payload: IRegisterUserPayload): Promise<IAccessToken> {
     if (payload.password !== payload.confirmPassword) {
       throw new RestApiException('Confirm password is not match');
     }
-    const user = await this.usersService.create({...payload, updatedAt: new Date(), createdAt: new Date()});
+    const user = await this.usersService.create({ ...payload });
     return this.generateAccessToken(user);
   }
 
-  async google (payload: ILoginGooglePayload): Promise<IAccessToken> {
-    const user = await this.usersService.googleCreate(payload);
+  async loginGoogle (payload: ILoginGooglePayload): Promise<IAccessToken> {
+    let user = await this.usersService.getByEmail(payload.email);
+    if (!user) {
+      user = await this.usersService.create(payload);
+    }
     return this.generateAccessToken(user);
   }
 
   async refresh (refreshToken: string): Promise<IAccessToken> {
-    const tokenData = verify(refreshToken, Environment.getRefreshTokenSecret());
+    const tokenData = this.verifyAccessToken(refreshToken);
     const user = await this.usersService.get((tokenData as IUser)._id);
     if (!user) {
       throw new RestApiException('Refresh token is not valid');
     }
     return this.generateAccessToken(user);
+  }
+
+  verifyAccessToken (token: string): any {
+    return verify(token, Environment.getRefreshTokenSecret());
   }
 
   generateAccessToken (user: IUser): IAccessToken {

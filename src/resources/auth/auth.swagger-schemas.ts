@@ -15,10 +15,23 @@ export const AuthSwaggerSchemas = {
       confirmPassword: { type: 'string', required: true }
     }
   },
+  loginGoogle: {
+    type: 'object',
+    properties: {
+      email: { type: 'string', required: true },
+      fullname: { type: 'string', required: true }
+    }
+  },
   refreshToken: {
     type: 'object',
     properties: {
       refreshToken: { type: 'string', required: true }
+    }
+  },
+  authenticate: {
+    type: 'object',
+    properties: {
+      accessToken: { type: 'string', required: true }
     }
   }
 };
