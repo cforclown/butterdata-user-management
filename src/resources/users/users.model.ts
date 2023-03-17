@@ -1,8 +1,7 @@
 import { Schema } from 'mongoose';
 
 export const UsersModel = new Schema({
-  username: { type: String, required: true },
-  password: { type: String, required: true },
+  password: { type: String, required: false },
   fullname: { type: String, required: true },
   email: { type: String, required: false, default: null },
   avatar: {
@@ -14,4 +13,4 @@ export const UsersModel = new Schema({
     default: null
   },
   archived: { type: Boolean, required: false, default: false }
-});
+}, { timestamps: true });

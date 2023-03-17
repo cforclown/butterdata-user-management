@@ -80,7 +80,7 @@ describe('auth-service', () => {
   describe('authenticate', () => {
     it('should successfully authenticate user', async () => {
       const user = await authService.authenticate({
-        username: 'username',
+        email: 'email',
         password: 'password'
       });
       expect(mockUsersDaoAuthenticate).toHaveBeenCalled();
@@ -91,7 +91,7 @@ describe('auth-service', () => {
       mockUsersDaoAuthenticate.mockRejectedValueOnce(new RestApiException('not found'));
 
       await expect(authService.authenticate({
-        username: 'username',
+        email: 'email',
         password: 'password'
       })).rejects.toThrow(RestApiException);
     });
@@ -100,7 +100,7 @@ describe('auth-service', () => {
   describe('login', () => {
     it('should successfully authenticate user', async () => {
       const token = await authService.login({
-        username: 'username',
+        email: 'email',
         password: 'password'
       });
       expect(mockUsersDaoAuthenticate).toHaveBeenCalled();
@@ -111,7 +111,7 @@ describe('auth-service', () => {
       mockUsersDaoAuthenticate.mockRejectedValueOnce(new RestApiException('not found'));
 
       await expect(authService.login({
-        username: 'username',
+        email: 'email',
         password: 'password'
       })).rejects.toThrow(RestApiException);
     });

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { dro } from './dro';
 import { HttpCodes } from './exceptions';
-import { saveErrorLog } from './common';
+import { ErrorLogger } from './common';
 // import { IUser } from '../resources';
 
 export function checkAuthorization (resourceType: string, action: string, forbiddenMsg = `You don't have the authority to '${action}' on resource '${resourceType}'`) {
@@ -17,7 +17,7 @@ export function checkAuthorization (resourceType: string, action: string, forbid
       return next();
     } catch (err) {
       if (err instanceof Error) {
-        saveErrorLog(err);
+        ErrorLogger(err);
       }
       return res.status(HttpCodes.Forbidden).send(dro.error(forbiddenMsg));
     }

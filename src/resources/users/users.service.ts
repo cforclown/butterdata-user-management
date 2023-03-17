@@ -1,7 +1,7 @@
 import { ICreateUserPayload, IUpdateUserPayload, IUser, UsersDao } from '.';
-import { ILoginPayload } from '../auth';
 import { RestApiException } from '../../utils/exceptions';
 import { hashPassword } from '../../utils';
+import { ILoginPayload } from '../auth';
 
 export class UsersService {
   private readonly usersDao: UsersDao;
@@ -10,9 +10,9 @@ export class UsersService {
     this.usersDao = usersDao;
   }
 
-  async authenticate ({ username, password }: ILoginPayload): Promise<IUser | null> {
+  async authenticate ({ email, password }: ILoginPayload): Promise<IUser | null> {
     return this.usersDao.authenticate({
-      username,
+      email,
       password: (await hashPassword(password))
     });
   }
@@ -21,39 +21,33 @@ export class UsersService {
     return this.usersDao.get(userId);
   }
 
+  getByEmail (email: string): Promise<IUser | null> {
+    return this.usersDao.getByEmail(email);
+  }
+
   getAll (): Promise<IUser[]> {
     return this.usersDao.getAll();
   }
 
   async create (payload: ICreateUserPayload): Promise<IUser> {
-    const [isUsernameTaken, isEmailRegistered] = await Promise.all([
-      this.usersDao.getByUsername(payload.username),
-      this.usersDao.getByEmail(payload.email)
-    ]);
-    if (isUsernameTaken) {
-      throw new RestApiException('Username is taken');
-    }
+    const isEmailRegistered = await this.usersDao.getByEmail(payload.email);
     if (isEmailRegistered) {
       throw new RestApiException('Email already registered');
     }
 
     return this.usersDao.create({
       ...payload,
-      password: (await hashPassword(payload.password))
+      password: payload.password ? (await hashPassword(payload.password)) : undefined
     });
   }
 
   async update (payload: IUpdateUserPayload): Promise<IUser> {
-    const [user, isUsernameTaken, isEmailRegistered] = await Promise.all([
+    const [user, isEmailRegistered] = await Promise.all([
       this.usersDao.get(payload._id),
-      payload.username ? this.usersDao.getByUsername(payload.username) : false,
       payload.email ? this.usersDao.getByEmail(payload.email) : false
     ]);
     if (!user) {
       throw new RestApiException('User not found');
-    }
-    if (isUsernameTaken && user.username !== payload.username) {
-      throw new RestApiException('Username is taken');
     }
     if (isEmailRegistered && user.email !== payload.email) {
       throw new RestApiException('Email already registered');

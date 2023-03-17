@@ -23,15 +23,9 @@ export const Environment = {
   },
 
   getServerPort: (): string => getEnvOrThrow('SERVER_PORT'),
-  getAppHost: (): string[] => {
-    const appHost = getEnvOrThrow('APP_HOST');
-    return appHost.split(',').filter(h => !!h);
-  },
 
-  getDBUri: (): string => `mongodb://${getEnvOrThrow('DB_HOST')}:${getEnvOrThrow('DB_PORT')}`,
+  getDBUri: (): string => getEnvOrThrow('DB_URI'),
   getDBName: (): string => getEnvOrThrow('DB_NAME'),
-  getDBUsername: (): string => getEnvOrThrow('DB_USERNAME'),
-  getDBPassword: (): string => getEnvOrThrow('DB_PASSWORD'),
 
   getSessionSecret: (): string => getEnvOrThrow('SESSION_SECRET'),
   getSessionResave: (): boolean => getEnvOrThrow('SESSION_RESAVE') === 'true',

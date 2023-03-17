@@ -10,7 +10,6 @@ import cors from 'cors';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUI from 'swagger-ui-express';
 import swaggerConfig from '../swagger/configs';
-import path from 'path';
 import { MainRouter } from './routers';
 
 function App (): Express {
@@ -18,13 +17,7 @@ function App (): Express {
   app.use(logger('dev'));
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ limit: '10mb', extended: false }));
-  app.use(
-    cors({
-      // origin: Environment.getAppHost(),
-      origin: 'http://localhost:3001',
-      credentials: true
-    })
-  );
+  app.use(cors({ credentials: true }));
   app.use(expressFlash());
   app.use(cookieParser());
   app.use(
@@ -46,12 +39,6 @@ function App (): Express {
   // #endregion -----------------------------------------------------------------------
 
   app.use('/', MainRouter());
-
-  // TODO: REMOVE AFTER FRONT-END FINISHED
-  app.use(express.static(path.join(__dirname, '../../public')));
-  app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../public/index.html'));
-  });
 
   return app;
 }

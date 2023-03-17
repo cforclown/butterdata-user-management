@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { dro } from './dro';
 import { HttpCodes, RestApiException } from './exceptions';
-import { saveErrorLog } from './common';
+import { ErrorLogger } from './common';
 import { JsonWebTokenError, NotBeforeError, TokenExpiredError } from 'jsonwebtoken';
 
 export function RequestHandler (event: (req: Request, res: Response, next: NextFunction) => Promise<any>) {
@@ -19,7 +19,7 @@ export function RequestHandler (event: (req: Request, res: Response, next: NextF
       }
 
       if (err instanceof Error) {
-        saveErrorLog(err);
+        ErrorLogger(err);
         return res.status(HttpCodes.Internal).send(dro.error(err.message));
       } else {
         return res.status(HttpCodes.Internal).send(dro.error('Unknown error'));

@@ -1,4 +1,3 @@
-import { existsSync, mkdirSync } from 'fs';
 import App from '../app';
 import Database from '../database';
 import { Environment, Logger } from '../utils/common';
@@ -6,8 +5,6 @@ import { Environment, Logger } from '../utils/common';
 export default class Server {
   async start (): Promise<void> {
     try {
-      this.createErrorLogFolder();
-
       Logger.success('============================================================================');
       Logger.success(`| ${Environment.getNodeEnv().toUpperCase()} MODE`);
       await (new Database()).connect();
@@ -23,12 +20,6 @@ export default class Server {
       if (err instanceof Error) {
         Logger.error(err.message);
       }
-    }
-  }
-
-  createErrorLogFolder (): void {
-    if (!existsSync('./error-log')) {
-      mkdirSync('./error-log');
     }
   }
 }
