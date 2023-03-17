@@ -20,8 +20,8 @@ function App (): Express {
   app.use(express.urlencoded({ limit: '10mb', extended: false }));
   app.use(
     cors({
-      // origin: Environment.getAppHost(),
-      origin: 'http://localhost:3001',
+      origin: Environment.getAppHost(),
+      // origin: 'http://localhost:3000',
       credentials: true
     })
   );

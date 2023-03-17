@@ -35,20 +35,20 @@ describe('users-dao', () => {
 
   describe('authenticate', () => {
     it('should successfully authenticate user', async () => {
-      const user = await usersDao.authenticate({ username: 'username', password: 'password' });
+      const user = await usersDao.authenticate({ email: 'email', password: 'password' });
       expect(MockMongooseModel.mockFindOne).toHaveBeenCalled();
       expect(user).toEqual(mockUser);
     });
 
     it('should throw an error when user not found', async () => {
       MockMongooseModel.mockExec.mockReturnValueOnce(Promise.resolve(null));
-      const user = await usersDao.authenticate({ username: 'username', password: 'password' });
+      const user = await usersDao.authenticate({ email: 'email', password: 'password' });
       expect(user).toEqual(null);
     });
 
     it('should throw an error when model.findOne throw an error', async () => {
       MockMongooseModel.mockExec.mockRejectedValueOnce(new Error('error'));
-      await expect(usersDao.authenticate({ username: 'username', password: 'password' })).rejects.toThrowError();
+      await expect(usersDao.authenticate({ email: 'email', password: 'password' })).rejects.toThrowError();
     });
   });
 
@@ -71,24 +71,6 @@ describe('users-dao', () => {
     });
   });
 
-  describe('getByUsername', () => {
-    it('should successfully return a user', async () => {
-      const user = await usersDao.getByUsername('mock-username');
-      expect(MockMongooseModel.mockFindOne).toHaveBeenCalled();
-      expect(user).toEqual(mockUser);
-    });
-
-    it('should throw an error when user not found', async () => {
-      MockMongooseModel.mockExec.mockReturnValueOnce(Promise.resolve(null));
-      const user = await usersDao.getByUsername('mock-username');
-      expect(user).toEqual(null);
-    });
-
-    it('should throw an error when model.findOne throw an error', async () => {
-      MockMongooseModel.mockExec.mockRejectedValueOnce(new Error('error'));
-      await expect(usersDao.getByUsername('mock-username')).rejects.toThrowError();
-    });
-  });
 
   describe('getByEmail', () => {
     it('should successfully return a user', async () => {
@@ -148,16 +130,16 @@ describe('users-dao', () => {
       jest.clearAllMocks();
     });
 
-    it('should successfully update only users username', async () => {
+    it('should successfully update only users email', async () => {
       const user = await usersDao.update({
         _id: 'id',
-        username: 'username'
+        email: 'email'
       });
       expect(MockMongooseModel.mockFindById).toHaveBeenCalled();
       expect(mockSave).toHaveBeenCalled();
       expect(user).toEqual(expect.objectContaining({
         ...mockUser,
-        username: 'username'
+        email: 'email'
       }));
     });
 

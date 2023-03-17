@@ -3,6 +3,7 @@ import { IAccessToken, ILoginPayload, IRegisterUserPayload } from '.';
 import { IUser, UsersService } from '..';
 import { Environment } from '../../utils/common';
 import { HttpCodes, RestApiException } from '../../utils/exceptions';
+import { ILoginGooglePayload } from './auth.types';
 
 export class AuthService {
   usersService: UsersService;
@@ -30,7 +31,7 @@ export class AuthService {
   async login (payload: ILoginPayload): Promise<IAccessToken> {
     const user = await this.usersService.authenticate(payload);
     if (!user) {
-      throw new RestApiException('Incorrect username or password', HttpCodes.NotFound);
+      throw new RestApiException('Incorrect email or password', HttpCodes.NotFound);
     }
     return this.generateAccessToken(user);
   }
@@ -46,7 +47,12 @@ export class AuthService {
     if (payload.password !== payload.confirmPassword) {
       throw new RestApiException('Confirm password is not match');
     }
-    const user = await this.usersService.create(payload);
+    const user = await this.usersService.create({...payload, updatedAt: new Date(), createdAt: new Date()});
+    return this.generateAccessToken(user);
+  }
+
+  async google (payload: ILoginGooglePayload): Promise<IAccessToken> {
+    const user = await this.usersService.googleCreate(payload);
     return this.generateAccessToken(user);
   }
 

@@ -10,6 +10,7 @@ export class AuthController {
     this.login = this.login.bind(this);
     this.register = this.register.bind(this);
     this.refresh = this.refresh.bind(this);
+    this.google = this.google.bind(this);
   }
 
   async login ({ body }: express.Request): Promise<IAccessToken> {
@@ -18,6 +19,10 @@ export class AuthController {
 
   async register ({ body }: express.Request): Promise<IAccessToken> {
     return this.authService.register(body);
+  }
+
+  async google ({ body }: express.Request): Promise<IAccessToken> {
+    return this.authService.google(body);
   }
 
   async refresh ({ body }: express.Request): Promise<IAccessToken> {

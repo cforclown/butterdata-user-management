@@ -8,12 +8,16 @@ export interface IAccessToken {
 }
 
 export interface ILoginPayload {
-  username: string;
+  email: string;
+  password: string;
+}
+
+export interface ILoginGooglePayload {
+  email: string;
   password: string;
 }
 
 export interface IRegisterUserPayload {
-  username: string;
   email: string;
   fullname: string;
   password: string;

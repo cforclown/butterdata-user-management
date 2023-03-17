@@ -1,7 +1,7 @@
 import express from 'express';
 import { dro, RequestHandler, validateBody } from '../../utils';
 import { HttpCodes } from '../../utils/exceptions';
-import { LoginPayloadSchema, RefreshTokenPayloadSchema, RegisterPayloadSchema } from '.';
+import { LoginPayloadSchema, LoginGooglePayloadSchema, RefreshTokenPayloadSchema, RegisterPayloadSchema } from '.';
 import { AuthController } from './auth.controller';
 
 export function AuthRouter ({ authController }: { authController: AuthController }): express.Router {
@@ -25,7 +25,9 @@ export function AuthRouter ({ authController }: { authController: AuthController
    *                          $ref: '#/components/schemas/login'
    */
   router.post('/login', validateBody(LoginPayloadSchema), RequestHandler(authController.login));
-  router.get('/login/error', async (req, res) => res.status(HttpCodes.NotFound).send(dro.error('Username or password is incorrect')));
+  router.get('/login/error', async (req, res) => res.status(HttpCodes.NotFound).send(dro.error('Email or password is incorrect')));
+
+  router.post('/login-google', validateBody(LoginGooglePayloadSchema), RequestHandler(authController.google));
 
   /**
    * @swagger
@@ -86,3 +88,4 @@ export function AuthRouter ({ authController }: { authController: AuthController
 
   return router;
 }
+
